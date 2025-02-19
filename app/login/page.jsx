@@ -1,9 +1,9 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation"; // For redirection after login
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -30,21 +30,33 @@ const LoginPage = () => {
         {
           email: formData.email,
           password: formData.password,
-        },
-        { withCredentials: true } // Allow cookies to be sent
+        }
       );
 
-      if (response.data.success) {
-        router.push("/dashboard"); // Redirect to dashboard or home
+      const { data } = response?.data
+      if (response.data.success && data) {
+        localStorage.setItem("authToken", data);
+        router.push("/dashboard")
       } else {
         setError(response.data.message);
       }
+
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");
     } finally {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      router.push("/login");
+    } else {
+      setLoading(false);
+      router.push("/dashboard");
+    }
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

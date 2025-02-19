@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "./Navbar";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -30,6 +29,7 @@ const Books = () => {
       const response = await axios.get(
         `http://localhost:5000/api/v1/books/list?page=${page}&limit=5&search=${search}`
       );
+      // console.log("response", response)
       const { books, totalPages } = response.data.data;
       setBooks(books);
       setTotalPages(totalPages);
@@ -45,7 +45,7 @@ const Books = () => {
 
   return (
     <div>
-      <Navbar />
+   
       <div className="container mx-auto p-6">
         <h1 className="text-2xl font-bold text-center mb-4">Books</h1>
 
@@ -57,7 +57,7 @@ const Books = () => {
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
-              setPage(1); 
+              setPage(1);
             }}
             className="w-72"
           />
@@ -96,7 +96,7 @@ const Books = () => {
           </TableBody>
         </Table>
 
-     
+
         <div className="flex justify-between mt-4">
           <Button disabled={page === 1} onClick={() => setPage(page - 1)}>
             Previous
